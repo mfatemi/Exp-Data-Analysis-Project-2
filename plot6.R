@@ -1,4 +1,4 @@
-library(plyr) 
+library(dplyr)
 library(plyr) 
 library(ggplot2)
 
@@ -8,11 +8,12 @@ NEI <- readRDS("summarySCC_PM25.rds")
 SCC <- readRDS("Source_Classification_Code.rds")
 
 #filter vehicales
-SSCfiltered <-  filter(SCC, grepl("vehicles", SCC$EI.Sector, ignore.case=TRUE))
-NEIfiltered <- NEI[NEI$SCC %in% SSCfiltered$SCC,]
+SCCfiltered <-  grepl("vehicles", SCC$EI.Sector, ignore.case=TRUE)
+SCCfiltered<-SCC[SCCfiltered,]
+NEIfiltered <- NEI[NEI$SCC %in% SCCfiltered$SCC,]
 
-# filter data using dplyr
-filteredData <- filter(NEIfiltered,fips %in% c("24510",  "06037"))
+# filter 
+filteredData <-NEIfiltered[NEIfiltered$fips %in% c("24510",  "06037"),]
 
 # add a new column city  / with deplyr it would be easier
 filteredData$city <- rep(NA, nrow(filteredData))

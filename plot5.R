@@ -1,4 +1,4 @@
-library(plyr) 
+library(dplyr) 
 library(plyr) 
 library(ggplot2)
 
@@ -8,11 +8,13 @@ NEI <- readRDS("summarySCC_PM25.rds")
 SCC <- readRDS("Source_Classification_Code.rds")
 
 #filter vehicales
-SSCfiltered <-  filter(SCC, grepl("vehicles", SCC.Level.Two, ignore.case=TRUE))
-NEIfiltered <- NEI[NEI$SCC %in% SSCfiltered$SCC,]
+SCCfiltered <-  grepl("vehicles", SCC$EI.Sector, ignore.case=TRUE)
+SCCfiltered<-SCC[SCCfiltered,]
+
+NEIfiltered <- NEI[NEI$SCC %in% SCCfiltered$SCC,]
 
 # filter data using dplyr
-BaltimoreData <- filter(NEIfiltered,fips == "24510")
+BaltimoreData <- NEIfiltered[NEIfiltered$fips == "24510", ]
 
 
 
@@ -27,3 +29,4 @@ gp<- ggplot(BaltimoreData,aes(x=factor(year), y=Emissions))  + geom_bar(stat="id
 print(gp)
 ##close file
 dev.off()
+
